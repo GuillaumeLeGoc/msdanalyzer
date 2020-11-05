@@ -22,7 +22,7 @@ if nargin < 2 || isempty(indices)
 end
 
 n_tracks = numel(indices);
-fprintf('Computing MSD of %d tracks... ', n_tracks);
+% fprintf('Computing MSD of %d tracks... ', n_tracks);
 
 % First, find all possible delays in time vectors.
 % Time can be arbitrary spaced, with frames missings,
@@ -37,11 +37,11 @@ if ~isempty(obj.drift)
     xdrift = obj.drift(:, 2:end);
 end
 
-fprintf('%5d/%5d', 0, n_tracks);
+% fprintf('%5d/%5d', 0, n_tracks);
 
 for i = 1 : n_tracks
     
-    fprintf('\b\b\b\b\b\b\b\b\b\b\b%5d/%5d', i, n_tracks);
+%     fprintf('\b\b\b\b\b\b\b\b\b\b\b%5d/%5d', i, n_tracks);
     
     mean_msd    = zeros(n_delays, 1);
     M2_msd2     = zeros(n_delays, 1);
@@ -75,13 +75,14 @@ for i = 1 : n_tracks
         dt = msdanalyzer.roundn(dt, msdanalyzer.TOLERANCE);
         
         % Determine target delay index in bulk
-        n_dt = numel( dt );
-        index_in_all_delays = NaN( n_dt, 1 );
-        
-        for k = 1 : n_dt
-            [ ~, l ] = min( abs( dt(k) - delays ) );
-            index_in_all_delays( k ) = l;
-        end
+        [~, index_in_all_delays, ~] = intersect(delays, dt);
+%         n_dt = numel( dt );
+%         index_in_all_delays = NaN( n_dt, 1 );
+%         
+%         for k = 1 : n_dt
+%             [ ~, l ] = min( abs( dt(k) - delays ) );
+%             index_in_all_delays( k ) = l;
+%         end
         
         % Square displacement in bulk
         dX = X(j+1:end,:) - repmat(X(j,:), [(n_detections-j) 1] );
@@ -107,7 +108,7 @@ for i = 1 : n_tracks
     obj.msd{index} = [ delays mean_msd std_msd n_msd ];
     
 end
-fprintf('\b\b\b\b\b\b\b\b\bDone.\n')
+% fprintf('\b\b\b\b\b\b\b\b\bDone.\n')
 
 obj.msd_valid = true;
 
